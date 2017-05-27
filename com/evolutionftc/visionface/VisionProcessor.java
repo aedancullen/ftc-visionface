@@ -77,7 +77,9 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
         //cameraViewParent.addView(cameraView);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.TYPE_APPLICATION);
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY);
         activity.setRequestedOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
         WindowManager wm = (WindowManager) appContext
