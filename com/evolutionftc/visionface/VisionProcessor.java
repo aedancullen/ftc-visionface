@@ -16,6 +16,7 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static android.content.Context.WINDOW_SERVICE;
+import static org.opencv.core.Core.FONT_HERSHEY_DUPLEX;
 
 
 public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListener2 {
@@ -38,6 +40,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     LinearLayout oView;
 
     private Rect[] locations;
+
+    private String cascadeName = "No cascade";
 
     private DetectionBasedTracker cascade;
 
@@ -156,6 +160,10 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             for (int i = 0; i < locations.length; i++)
                 Imgproc.rectangle(mRgba, locations[i].tl(), locations[i].br(), new Scalar(0, 255, 0, 255), 2);
 
+            // rofl
+            Imgproc.putText(mRgba, cascadeName, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
+            Imgproc.putText(mRgba, "EVOLUTION VISIONFACE", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 2, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
+            Imgproc.putText(mRgba, "BETTER THAN VUFORIA", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
             return mRgba;
         }
     }
@@ -165,6 +173,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public void loadCascade(String name) {
+        cascadeName = "Tracking: " + name;
+
         try {
 
             InputStream is = appContext.getResources().openRawResource(
