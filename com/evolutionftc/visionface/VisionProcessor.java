@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static android.content.Context.WINDOW_SERVICE;
+import static org.opencv.core.Core.FILLED;
 import static org.opencv.core.Core.FONT_HERSHEY_DUPLEX;
 
 
@@ -145,8 +146,9 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        Mat mRgba = inputFrame.rgba();
+
         if (cascade == null) {
-            return inputFrame.rgba();
         }
         else{
             MatOfRect detections = new MatOfRect();
@@ -155,17 +157,15 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
             locations = detections.toArray();
 
-            Mat mRgba = inputFrame.rgba();
-
             for (int i = 0; i < locations.length; i++)
                 Imgproc.rectangle(mRgba, locations[i].tl(), locations[i].br(), new Scalar(0, 255, 0, 255), 2);
 
-            // rofl
-            Imgproc.putText(mRgba, cascadeName, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
-            Imgproc.putText(mRgba, "EVOLUTION FTC VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 2, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
-            Imgproc.putText(mRgba, "by aedan cullen", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
-            return mRgba;
         }
+        // rofl
+        Imgproc.putText(mRgba, cascadeName, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
+        Imgproc.putText(mRgba, "EVOLUTION FTC VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 2, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
+        Imgproc.putText(mRgba, "CASCADE CLASSIFIER", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
+        return mRgba;
     }
 
     public Rect[] getLocations() {
