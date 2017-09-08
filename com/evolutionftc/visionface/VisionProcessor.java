@@ -125,15 +125,18 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
         Runnable stopper = new Runnable() {
             public void run() {
+                try {
+                    cameraView.disableView();
 
-                cameraView.disableView();
+                    //RelativeLayout thingy = (RelativeLayout) activity.findViewById(R.id.RelativeLayout);
 
-                //RelativeLayout thingy = (RelativeLayout) activity.findViewById(R.id.RelativeLayout);
+                    oView.removeView(cameraView);
 
-                oView.removeView(cameraView);
-
-                WindowManager wm = (WindowManager) appContext.getSystemService(WINDOW_SERVICE);
-                wm.removeView(oView);
+                    WindowManager wm = (WindowManager) appContext.getSystemService(WINDOW_SERVICE);
+                    wm.removeView(oView);
+                }
+                catch (Exception e) {
+                }
 
             }
         };
