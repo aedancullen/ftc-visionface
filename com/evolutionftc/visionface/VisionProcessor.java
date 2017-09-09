@@ -172,7 +172,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
         // rofl
         Imgproc.putText(mRgba, cascadeName, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
         Imgproc.putText(mRgba, "EVOLUTION ADVANCED VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 1.5, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
-        Imgproc.putText(mRgba, "ftc team 9867", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
+        Imgproc.putText(mRgba, "better than Vuforia", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
         return mRgba;
     }
 
