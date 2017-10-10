@@ -44,8 +44,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private double y;
     private double z;
     
-    private int width;
-    private int height;
+    private int capWidth;
+    private int capHeight;
 
     private String diagText = "No ObjectSpec loaded";
 
@@ -150,8 +150,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public void onCameraViewStarted(int width, int height) {
-        this.width = width;
-        this.heigh = height;
+        this.capWidth = width;
+        this.capHeight = height;
     }
 
     public void onCameraViewStopped() {
@@ -169,8 +169,16 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
             Rect[] locations = detections.toArray();
 
-            for (int i = 0; i < locations.length; i++)
-                Imgproc.rectangle(mRgba, locations[i].tl(), locations[i].br(), new Scalar(0, 255, 0, 255), 2);
+            Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
+            
+            double objectDistancePerPx = object.distanceSample / object.widthSampleAtDistance;
+            double objectDistance = objectDistancePerPx * (locations[0].width);
+            
+            double objectAnglePerPxHoriz = camera.horizontalFovRadians / capWidth;
+            double objectAnglePerPxVert = camera.verticalFovRadians / capHeight;
+            
+            double objectAngleHoriz = objectAnglePerPxHoriz * (((locations[0].br().x + locations[0].tl().x) / 2.0) - (capWidth / 2.0));
+            double objectAngleVert = objectAnglePerPxVert * (((locations[0].br().y + locations[0].tl().y) / 2.0) - (capHeight / 2.0));
 
         }
         // rofl
