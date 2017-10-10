@@ -40,14 +40,15 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
     LinearLayout oView;
 
-    private Rect[] locations;
+    private double x;
+    private double y;
+    private double z;
 
-    private String cascadeName = "No cascade";
+    private String diagText = "No ObjectSpec loaded";
 
-    private DetectionBasedTracker cascade;
-
-    public int cameraWidth;
-    public int cameraHeight;
+    private ObjectSpec object;
+    
+    private CameraSpec camera;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(activity) {
         @Override
@@ -146,8 +147,6 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public void onCameraViewStarted(int width, int height) {
-        cameraHeight = height;
-        cameraWidth = width;
     }
 
     public void onCameraViewStopped() {
@@ -156,58 +155,39 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
 
-        if (cascade == null) {
+        if (object == null) {
         }
         else{
             MatOfRect detections = new MatOfRect();
 
-            cascade.detect(inputFrame.gray(), detections);
+            object.cascade.detect(inputFrame.gray(), detections);
 
-            locations = detections.toArray();
+            Rect[] locations = detections.toArray();
 
             for (int i = 0; i < locations.length; i++)
                 Imgproc.rectangle(mRgba, locations[i].tl(), locations[i].br(), new Scalar(0, 255, 0, 255), 2);
 
         }
         // rofl
-        Imgproc.putText(mRgba, cascadeName, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
+        Imgproc.putText(mRgba, diagText, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
         Imgproc.putText(mRgba, "EVOLUTION ADVANCED VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 1.5, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
         Imgproc.putText(mRgba, "better than Vuforia", new Point(10, mRgba.height() / 2 + 30), FONT_HERSHEY_DUPLEX, 1, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
         return mRgba;
     }
 
-    public Rect[] getLocations() {
-        return locations;
+    public double[] getObjectPosition() {
+        return new double[]{x,y,z};
     }
 
-    public void loadCascade(String name) {
-        cascadeName = "Tracking: " + name;
+    public void loadObject(ObjectSpec object) {
+        diagText = "Tracking ObjectSpec: " + object.cascadeName;
+        
+        this.object = object;
 
-        try {
-
-            InputStream is = appContext.getResources().openRawResource(
-                    appContext.getResources().getIdentifier(name, "raw", appContext.getPackageName()));
-
-            File cascadeDir = appContext.getDir("cascade", Context.MODE_PRIVATE);
-            File cascadeFile = new File(cascadeDir, "current-cascade.xml");
-            FileOutputStream os = new FileOutputStream(cascadeFile);
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-            is.close();
-            os.close();
-
-            cascade = new DetectionBasedTracker(cascadeFile.getAbsolutePath(), 0);
-
-            Log.d(TAG, "Load cascade " + name + " done");
-
-        }
-        catch (IOException e) {
-            throw new IllegalStateException("Problem loading cascade: " + e);
-        }
+    }
+    
+    public void loadCamera(CameraSpec camera){
+        this.camera = camera;
     }
 
 }
