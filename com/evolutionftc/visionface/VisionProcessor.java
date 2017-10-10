@@ -43,6 +43,9 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private double x;
     private double y;
     private double z;
+    
+    private int width;
+    private int height;
 
     private String diagText = "No ObjectSpec loaded";
 
@@ -147,6 +150,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public void onCameraViewStarted(int width, int height) {
+        this.width = width;
+        this.heigh = height;
     }
 
     public void onCameraViewStopped() {
