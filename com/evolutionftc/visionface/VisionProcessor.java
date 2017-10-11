@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import org.opencv.android.BaseLoaderCallback;
+
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
@@ -43,6 +44,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private double x;
     private double y;
     private double z;
+    private boolean isSeen;
     
     private int capWidth;
     private int capHeight;
@@ -72,9 +74,10 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
         }
     };
 
-    public VisionProcessor(Context context) {
+    public VisionProcessor(Context context, CameraSpec camera) {
         activity = (Activity)context;
         appContext = context;
+        this.camera = camera;
 
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization of 3.3.0");
@@ -161,6 +164,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
         Mat mRgba = inputFrame.rgba();
 
         if (object == null) {
+            isSeen = false;
         }
         else{
             MatOfRect detections = new MatOfRect();
@@ -179,6 +183,14 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             
             double objectAngleHoriz = objectAnglePerPxHoriz * (((locations[0].br().x + locations[0].tl().x) / 2.0) - (capWidth / 2.0));
             double objectAngleVert = objectAnglePerPxVert * (((locations[0].br().y + locations[0].tl().y) / 2.0) - (capHeight / 2.0));
+            
+            double objectPosX = Math.sin(objectAngleHoriz) * objectDistance;
+            double objectPosY = Math.sin(objectAngleVert) * objectDistance;
+            
+            this.x = objectPosX;
+            this.y = objectPosY;
+            this.z = objectDistance;
+            this.isSeen = true;
 
         }
         // rofl
@@ -191,16 +203,16 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     public double[] getObjectPosition() {
         return new double[]{x,y,z};
     }
+    
+    public boolean getIsSeen() {
+        return isSeen;
+    }
 
     public void loadObject(ObjectSpec object) {
         diagText = "Tracking ObjectSpec: " + object.cascadeName;
         
         this.object = object;
 
-    }
-    
-    public void loadCamera(CameraSpec camera){
-        this.camera = camera;
     }
 
 }
