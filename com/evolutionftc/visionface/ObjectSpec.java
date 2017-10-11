@@ -22,8 +22,8 @@ public class ObjectSpec:
             InputStream is = appContext.getResources().openRawResource(
                     appContext.getResources().getIdentifier(name, "raw", appContext.getPackageName()));
 
-            File cascadeDir = appContext.getDir("cascade", Context.MODE_PRIVATE);
-            File cascadeFile = new File(cascadeDir, "current-cascade.xml");
+            File cascadeDir = appContext.getDir("loaded-cascades", Context.MODE_PRIVATE);
+            File cascadeFile = new File(cascadeDir, "loaded-" + cascadeName);
             FileOutputStream os = new FileOutputStream(cascadeFile);
 
             byte[] buffer = new byte[4096];
