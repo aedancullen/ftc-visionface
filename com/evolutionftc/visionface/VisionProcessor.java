@@ -45,6 +45,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private double y;
     private double z;
     private boolean isSeen;
+    private Rect[] rawDetections;
     
     private int capWidth;
     private int capHeight;
@@ -172,6 +173,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             object.cascade.detect(inputFrame.gray(), detections);
 
             Rect[] locations = detections.toArray();
+            rawDetections = locations;
 
             Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
             
@@ -206,6 +208,10 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     
     public boolean getIsSeen() {
         return isSeen;
+    }
+    
+    public Rect[] getRawDetections() {
+        return rawDetections;
     }
 
     public void loadObject(ObjectSpec object) {
