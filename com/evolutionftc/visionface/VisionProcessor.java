@@ -160,6 +160,10 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
     public void onCameraViewStopped() {
     }
+    
+    private String dp(double in) {
+        return String.valueOf(Math.round(in * 100.0) / 100.0);
+    }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
@@ -193,8 +197,10 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             this.y = objectPosY;
             this.z = objectDistance;
             this.isSeen = true;
+           
 
         }
+        diagText = object.cascadeName + " (x:" + dp(x) + " y:" + dp(y) + " z:" + dp(z) + " seen:" + String.valueOf(isSeen) + ")";
         // rofl
         Imgproc.putText(mRgba, diagText, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
         Imgproc.putText(mRgba, "EVOLUTION ADVANCED VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 1.5, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
@@ -215,9 +221,11 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     public void loadObject(ObjectSpec object) {
-        diagText = "Tracking ObjectSpec: " + object.cascadeName;
-        
         this.object = object;
+        
+        if (object == null) {
+            diagText = "No ObjectSpec loaded"
+        }
 
     }
 
