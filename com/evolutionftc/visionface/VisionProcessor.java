@@ -180,8 +180,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
                 Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
 
-                double objectDistancePerPx = object.distanceSample / object.widthSampleAtDistance;
-                double objectDistance = objectDistancePerPx * (locations[0].width);
+                double objectDistance = (capWidth / (double)locations[0].width) * object.fullFrameWidthDistance;
 
                 double objectAnglePerPxHoriz = camera.horizontalFovRadians / capWidth;
                 double objectAnglePerPxVert = camera.verticalFovRadians / capHeight;
