@@ -173,26 +173,31 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             Rect[] locations = detections.toArray();
             rawDetections = locations;
 
-            Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
+            if (locations.length == 0) {
+                isSeen = false;
+            }
+            else {
 
-            double objectDistancePerPx = object.distanceSample / object.widthSampleAtDistance;
-            double objectDistance = objectDistancePerPx * (locations[0].width);
+                Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
 
-            double objectAnglePerPxHoriz = camera.horizontalFovRadians / capWidth;
-            double objectAnglePerPxVert = camera.verticalFovRadians / capHeight;
+                double objectDistancePerPx = object.distanceSample / object.widthSampleAtDistance;
+                double objectDistance = objectDistancePerPx * (locations[0].width);
 
-            double objectAngleHoriz = objectAnglePerPxHoriz * (((locations[0].br().x + locations[0].tl().x) / 2.0) - (capWidth / 2.0));
-            double objectAngleVert = objectAnglePerPxVert * (((locations[0].br().y + locations[0].tl().y) / 2.0) - (capHeight / 2.0));
+                double objectAnglePerPxHoriz = camera.horizontalFovRadians / capWidth;
+                double objectAnglePerPxVert = camera.verticalFovRadians / capHeight;
 
-            double objectPosX = Math.sin(objectAngleHoriz) * objectDistance;
-            double objectPosY = Math.sin(objectAngleVert) * objectDistance;
+                double objectAngleHoriz = objectAnglePerPxHoriz * (((locations[0].br().x + locations[0].tl().x) / 2.0) - (capWidth / 2.0));
+                double objectAngleVert = objectAnglePerPxVert * (((locations[0].br().y + locations[0].tl().y) / 2.0) - (capHeight / 2.0));
 
-            this.x = objectPosX;
-            this.y = objectPosY;
-            this.z = objectDistance;
-            this.isSeen = true;
+                double objectPosX = Math.sin(objectAngleHoriz) * objectDistance;
+                double objectPosY = Math.sin(objectAngleVert) * objectDistance;
 
+                this.x = objectPosX;
+                this.y = objectPosY;
+                this.z = objectDistance;
+                this.isSeen = true;
 
+            }
         }
         diagText = object.cascadeName + " (x:" + dp(x) + " y:" + dp(y) + " z:" + dp(z) + " seen:" + String.valueOf(isSeen) + ")";
         // rofl
