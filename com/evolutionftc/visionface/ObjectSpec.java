@@ -1,22 +1,33 @@
 package com.evolutionftc.visionface;
 
 
-public class ObjectSpec:
+import android.content.Context;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class ObjectSpec {
 
     public String cascadeName;
+
+    private Context appContext;
 
     public double distanceSample;
     public int widthSampleAtDistance;
 
     public DetectionBasedTracker cascade;
 
-    public ObjectSpec(String cascadeName, double distanceSample, int widthSampleAtDistance){
+    public ObjectSpec(Context context, String cascadeName, double distanceSample, int widthSampleAtDistance) {
+        this.appContext = context;
         this.cascadeName = cascadeName;
         this.distanceSample = distanceSample;
         this.widthSampleAtDistance = widthSampleAtDistance;
-      
+
         String name = cascadeName;
-      
+
         try {
 
             InputStream is = appContext.getResources().openRawResource(
@@ -38,8 +49,7 @@ public class ObjectSpec:
 
             Log.d("ObjectSpec", "Load cascade " + name + " done");
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Problem loading cascade: " + e);
         }
     }
