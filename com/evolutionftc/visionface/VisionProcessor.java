@@ -199,7 +199,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
             }
         }
-        diagText = object.cascadeName + " (x:" + dp(x) + " y:" + dp(y) + " z:" + dp(z) + " seen:" + String.valueOf(isSeen) + ")";
+        diagText = "(x:" + dp(x) + " y:" + dp(y) + " z:" + dp(z) + " seen:" + String.valueOf(isSeen) + ")";
         // rofl
         Imgproc.putText(mRgba, diagText, new Point(10, mRgba.height() - 10), FONT_HERSHEY_DUPLEX, 0.8, new Scalar(0, 0, 255, 255));
         Imgproc.putText(mRgba, "EVOLUTION ADVANCED VISION", new Point(10, mRgba.height() / 2), FONT_HERSHEY_DUPLEX, 1.5, new Scalar(255,255,255, 255), 3, Imgproc.LINE_AA, false);
