@@ -41,8 +41,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private boolean isSeen;
     private Rect[] rawDetections;
 
-    private int capWidth;
-    private int capHeight;
+    public int capWidth;
+    public int capHeight;
 
     private String diagText = "No ObjectSpec loaded";
 
