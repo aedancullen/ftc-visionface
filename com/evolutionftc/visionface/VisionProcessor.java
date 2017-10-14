@@ -22,13 +22,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import static android.content.Context.WINDOW_SERVICE;
-import static org.opencv.core.Core.FILLED;
 import static org.opencv.core.Core.FONT_HERSHEY_DUPLEX;
 
 
@@ -46,14 +40,14 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     private double z;
     private boolean isSeen;
     private Rect[] rawDetections;
-    
+
     private int capWidth;
     private int capHeight;
 
     private String diagText = "No ObjectSpec loaded";
 
     private ObjectSpec object;
-    
+
     private CameraSpec camera;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(activity) {
@@ -160,7 +154,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
     public void onCameraViewStopped() {
     }
-    
+
     private String dp(double in) {
         return String.valueOf(Math.round(in * 100.0) / 100.0);
     }
@@ -180,24 +174,24 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
             rawDetections = locations;
 
             Imgproc.rectangle(mRgba, locations[0].tl(), locations[0].br(), new Scalar(0, 255, 0, 255), 2);
-            
+
             double objectDistancePerPx = object.distanceSample / object.widthSampleAtDistance;
             double objectDistance = objectDistancePerPx * (locations[0].width);
-            
+
             double objectAnglePerPxHoriz = camera.horizontalFovRadians / capWidth;
             double objectAnglePerPxVert = camera.verticalFovRadians / capHeight;
-            
+
             double objectAngleHoriz = objectAnglePerPxHoriz * (((locations[0].br().x + locations[0].tl().x) / 2.0) - (capWidth / 2.0));
             double objectAngleVert = objectAnglePerPxVert * (((locations[0].br().y + locations[0].tl().y) / 2.0) - (capHeight / 2.0));
-            
+
             double objectPosX = Math.sin(objectAngleHoriz) * objectDistance;
             double objectPosY = Math.sin(objectAngleVert) * objectDistance;
-            
+
             this.x = objectPosX;
             this.y = objectPosY;
             this.z = objectDistance;
             this.isSeen = true;
-           
+
 
         }
         diagText = object.cascadeName + " (x:" + dp(x) + " y:" + dp(y) + " z:" + dp(z) + " seen:" + String.valueOf(isSeen) + ")";
@@ -211,20 +205,20 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     public double[] getObjectPosition() {
         return new double[]{x,y,z};
     }
-    
+
     public boolean getIsSeen() {
         return isSeen;
     }
-    
+
     public Rect[] getRawDetections() {
         return rawDetections;
     }
 
     public void loadObject(ObjectSpec object) {
         this.object = object;
-        
+
         if (object == null) {
-            diagText = "No ObjectSpec loaded"
+            diagText = "No ObjectSpec loaded";
         }
 
     }
