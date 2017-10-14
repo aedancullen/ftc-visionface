@@ -156,7 +156,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     }
 
     private String dp(double in) {
-        return String.valueOf(Math.round(in * 100.0) / 100.0);
+        return String.format("%.2f", in);
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
