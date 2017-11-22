@@ -44,11 +44,14 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
     public int capWidth;
     public int capHeight;
 
+    public Mat lastFrame;
+
     private String diagText = "No ObjectSpec loaded";
 
     private ObjectSpec object;
 
     private CameraSpec camera;
+
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(activity) {
         @Override
@@ -161,6 +164,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
+        lastFrame = mRgba;
 
         if (object == null) {
             isSeen = false;
