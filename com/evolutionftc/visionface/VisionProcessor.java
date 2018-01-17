@@ -72,6 +72,8 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
         }
     };
 
+    public VisionProcessor() {};
+
     public VisionProcessor(Context context, CameraSpec camera) {
         activity = (Activity)context;
         appContext = context;
