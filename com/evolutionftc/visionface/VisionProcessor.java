@@ -166,7 +166,7 @@ public class VisionProcessor implements CameraBridgeViewBase.CvCameraViewListene
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat mRgba = inputFrame.rgba();
-        lastFrame = mRgba;
+        mRgba.copyTo(lastFrame);
 
         if (object == null) {
             isSeen = false;
